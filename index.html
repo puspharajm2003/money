@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Transaction Manager</title>
+    <script type="module">
+        import { addTransaction, fetchTransactions } from './transactions.js';
+
+        document.addEventListener('DOMContentLoaded', () => {
+            const addButton = document.getElementById('add-button');
+            const transactionsList = document.getElementById('transactions-list');
+
+            addButton.addEventListener('click', () => {
+                const name = document.getElementById('transaction-name').value;
+                const amount = parseFloat(document.getElementById('transaction-amount').value);
+                const date = new Date().toISOString().split('T')[0];
+                const time = new Date().toTimeString().split(' ')[0];
+                
+                addTransaction({ name, amount, date, time });
+            });
+
+            fetchTransactions((transactions) => {
+                transactionsList.innerHTML = transactions.map(transaction => `
+                    <li>${transaction.name} - ${transaction.amount} - ${transaction.date} ${transaction.time}</li>
+                `).join('');
+            });
+        });
+    </script>
+</head>
+<body>
+    <h1>Transaction Manager</h1>
+    <input type="text" id="transaction-name" placeholder="Transaction Name">
+    <input type="number" id="transaction-amount" placeholder="Amount">
+    <button id="add-button">Add Transaction</button>
+    <ul id="transactions-list"></ul>
+</body>
+</html>
